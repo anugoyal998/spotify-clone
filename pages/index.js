@@ -1,6 +1,7 @@
 import { ChevronRightIcon } from "@heroicons/react/outline";
-import { getSession } from "next-auth/react";
-import { useState } from "react";
+import { getSession, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import Drawer from "../components/Drawer";
 import Main from "../components/Main";
 import Player from "../components/Player";
@@ -8,6 +9,12 @@ import Sidebar from "../components/Sidebar";
 
 export default function Home() {
   const [drawer,setDrawer] = useState(false)
+  const {data:session} = useSession()
+  const router = useRouter()
+  useEffect(() => {
+    if(!session)router.push('/login')
+  },[])
+  if(session)
   return (
   <div className="bg-black h-screen overflow-hidden">
     <main className="flex">
@@ -21,6 +28,7 @@ export default function Home() {
     <Drawer open={drawer} setOpen={setDrawer} component={<Sidebar/>} />
   </div>
   )
+  else return null
 }
 
 
